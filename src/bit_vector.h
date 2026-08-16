@@ -81,7 +81,7 @@ BitVector<dim> operator+(BitVector<dim> vec1, BitVector<dim> vec2)
 template <std::size_t dim>
 std::ostream& operator<<(std::ostream& out, BitVector<dim> vec)
 {
-    for (size_t i {dim}; i-- > 0;)
+    for (size_t i {}; i < dim; ++i)
     {
         out << vec[i] << " ";
     }

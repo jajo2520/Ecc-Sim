@@ -26,6 +26,9 @@ public:
 
     BitMatrix<row, col>& operator+=(const BitMatrix<row, col>& mat);
 
+    template<std::size_t dim>
+    static BitMatrix<dim, dim> identity();
+
 private:
     std::bitset<row*col> mData;
     std::size_t getPos(std::size_t i, std::size_t j) const;
@@ -169,7 +172,7 @@ std::ostream& operator<<(std::ostream& out, BitMatrix<row, col> mat)
 {
     for (int i {}; i < row; ++i)
     {
-        for (int j {col}; j-- > 0;)
+        for (int j {}; j < col; ++j)
         {
             out << mat.get(i,j) << " ";
         }
@@ -204,4 +207,13 @@ BitMatrix<row1, col2> operator*(BitMatrix<row1, col1> mat1, BitMatrix<row2, col2
     return outMat;
 }
 
+template <std::size_t row, std::size_t col>
+template <std::size_t dim>
+BitMatrix<dim, dim> BitMatrix<row, col>::identity()
+{
+    BitMatrix<dim, dim> outMat {};
+    for (std::size_t i; i<dim; ++i)
+        outMat.set(i,i, 1);
 
+    return outMat;
+}
