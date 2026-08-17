@@ -1,5 +1,6 @@
 #include <complex>
 #include <iostream>
+#include <array>
 #include "bit_matrix.h"
 #include "bit_vector.h"
 
@@ -14,10 +15,11 @@ public:
     const BitMatrix<r, n>& getCheckMat() const;
     const BitMatrix<n, k>& getGenMat() const;
     BitVector<n> encode(const BitVector<k>& message);
-    BitVector<r> decode(const BitVector<n>& received);
+    BitVector<k> decode(const BitVector<n>& message);
 private:
     BitMatrix<r, n> checkMat;
     BitMatrix<n, k> genMat;
+    std::array<std::size_t, n> bitMap {};
     void buildMatrices();
 };
 
@@ -50,9 +52,10 @@ void HammingCode<r>::buildMatrices()
     std::size_t bits {1};
     while (i<k) 
     {
-        if ((bits & (bits-1)) != 0)
+        if ((bits & (bits-1)) != 0) // not a multiple of 2
         {
             checkMat.setCol(i, BitVector<r>(bits));
+            bitMap[bits-1] = i;
             i++;
         }
         bits++;
@@ -64,6 +67,7 @@ void HammingCode<r>::buildMatrices()
         if ((bits & (bits-1)) == 0)
         {
             checkMat.setCol(j, BitVector<r>(bits));
+            bitMap[bits-1] = j;
             j++;
         }
         bits++;
@@ -79,3 +83,32 @@ void HammingCode<r>::buildMatrices()
             genMat.set(i,j,checkMat.get(i-k,j));
     }
 }
+
+template <std::size_t r>
+BitVector<HammingCode<r>::n> HammingCode<r>::encode(const BitVector<k>& message)
+{
+    return genMat*message;
+}
+
+template <std::size_t r>
+BitVector<HammingCode<r>::k> HammingCode<r>::decode(const BitVector<HammingCode<r>::n>& received)
+{
+    BitVector<r> syndrome = checkMat * received;
+    std::size_t errorNum {};
+
+    for (std::size_t i {}; i < r; ++i)
+        errorNum += (std::size_t{1} << i) * syndrome[i];
+
+    BitVector<HammingCode<r>::k> correctMessage {0};
+    for (std::size_t i {}; i < k; ++i)
+        correctMessage.set(i, received[i]);
+
+    if (errorNum != 0)                          
+    {
+        std::size_t errorPos {bitMap[errorNum]-1};
+        if (errorPos < k)
+            correctMessage.set(errorPos, received[errorPos] ^ 1);
+    }
+    return correctMessage;
+}
+
