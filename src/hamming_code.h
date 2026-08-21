@@ -105,10 +105,11 @@ BitVector<HammingCode<r>::k> HammingCode<r>::decode(const BitVector<HammingCode<
 
     if (errorNum != 0)                          
     {
-        std::size_t errorPos {bitMap[errorNum]-1};
+        std::size_t errorPos {bitMap[errorNum-1]};
         if (errorPos < k)
             correctMessage.set(errorPos, received[errorPos] ^ 1);
     }
+
     return correctMessage;
 }
 

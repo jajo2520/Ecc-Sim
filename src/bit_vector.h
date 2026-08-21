@@ -3,7 +3,6 @@
 #include <bitset>
 #include <cstddef>
 #include <iostream>
-#include <iterator>
 #include <stdexcept>
 
 template <std::size_t dim>
@@ -18,6 +17,16 @@ public:
     bool dot(const BitVector<dim>& vec) const;
     BitVector<dim> operator+=(const BitVector<dim>& vec);
     BitVector<dim> reverse() const;
+
+    friend bool operator==(const BitVector<dim>& vec1, const BitVector<dim>& vec2) // have to define in class
+    {
+        return (vec1.mData==vec2.mData);
+    }
+
+    friend bool operator!=(const BitVector<dim>& vec1, const BitVector<dim>& vec2)
+    {
+        return !(vec1.mData==vec2.mData);
+    }
 private:
     std::bitset<dim> mData;
 };
@@ -28,6 +37,7 @@ std::ostream& operator<<(std::ostream& out, BitVector<dim> vec);
 template <std::size_t dim>
 BitVector<dim> operator+(BitVector<dim> vec1, BitVector<dim> vec2);
 
+
 // definitions 
 
 template <std::size_t dim>
@@ -37,7 +47,7 @@ template <std::size_t dim>
 void BitVector<dim>::set(std::size_t pos, bool state) {mData[pos]=state;}
 
 template <std::size_t dim>
-void BitVector<dim>::toggle(std::size_t pos) {mData.toggle(pos);}
+void BitVector<dim>::toggle(std::size_t pos) {mData.flip(pos);}
 
 template <std::size_t dim>
 bool BitVector<dim>::get(std::size_t pos) const 
@@ -85,6 +95,17 @@ BitVector<dim> BitVector<dim>::reverse() const
     return outVec;
 }
 
+template <std::size_t dim>
+BitVector<dim> operator==(const BitVector<dim>& vec1, const BitVector<dim>& vec2)
+{
+    return (vec1.mData==vec2.mData);
+}
+
+template <std::size_t dim>
+BitVector<dim> operator!=(const BitVector<dim>& vec1, const BitVector<dim>& vec2)
+{
+    return !(vec1.mData==vec2.mData);
+}
 template <std::size_t dim>
 BitVector<dim> operator+(BitVector<dim> vec1, BitVector<dim> vec2)
 {

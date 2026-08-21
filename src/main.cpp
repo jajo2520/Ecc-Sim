@@ -16,7 +16,9 @@ int main()
     //std::cout << myHam.encode(test) << std::endl;
     //std::cout << myHam.decode(BitVector<7>(0b0010111).reverse());
     std::cout << myHam.encode(test) << std::endl;
-    std::cout << myHam.decode(myHam.encode(test) + BitVector<15>(0b0100'0000'000'0000));
+    std::cout << myHam.decode(myHam.encode(test) + BitVector<15>(0b0000'0000'010'0000).reverse());
+    
 
     return 0;
+    
 }

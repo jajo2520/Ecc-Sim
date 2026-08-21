@@ -47,14 +47,15 @@ BitMatrix<row1, col2> operator*(BitMatrix<row1, col1> mat1, BitMatrix<row2, col2
 template <std::size_t row, std::size_t col>
 std::ostream& operator<<(std::ostream& out, BitMatrix<row, col> mat);
 
-
 // definitions
 
 template <std::size_t row, std::size_t col>
 BitMatrix<row, col>::BitMatrix(const std::array<BitVector<col>, row>& rows)
 { 
     for (size_t i {}; i<row; i++)
+    {
         setRow(i,rows[i]);
+    }
 }
 
 
