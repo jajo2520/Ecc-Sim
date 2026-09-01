@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include "bit_matrix.h"
 #include "bit_vector.h"
@@ -12,8 +14,8 @@ public:
 
     const BitMatrix<r, n>& getCheckMat() const;
     const BitMatrix<n, k>& getGenMat() const;
-    BitVector<n> encode(const BitVector<k>& message);
-    BitVector<k> decode(const BitVector<n>& message);
+    BitVector<n> encode(const BitVector<k>& message) const;
+    BitVector<k> decode(const BitVector<n>& message) const;
 private:
     BitMatrix<r, n> checkMat;
     BitMatrix<n, k> genMat;
@@ -83,13 +85,13 @@ void HammingCode<r>::buildMatrices()
 }
 
 template <std::size_t r>
-BitVector<HammingCode<r>::n> HammingCode<r>::encode(const BitVector<k>& message)
+BitVector<HammingCode<r>::n> HammingCode<r>::encode(const BitVector<k>& message) const
 {
     return genMat*message;
 }
 
 template <std::size_t r>
-BitVector<HammingCode<r>::k> HammingCode<r>::decode(const BitVector<HammingCode<r>::n>& received)
+BitVector<HammingCode<r>::k> HammingCode<r>::decode(const BitVector<HammingCode<r>::n>& received) const
 {
     BitVector<r> syndrome = checkMat * received;
     std::size_t errorNum {};

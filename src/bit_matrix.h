@@ -1,9 +1,11 @@
 #pragma once
+
 #include <array>
 #include <bitset>
 #include <cstddef>
 #include <iostream>
 #include <stdexcept>
+
 #include "bit_vector.h"
 
 template <std::size_t row, std::size_t col>

@@ -15,6 +15,8 @@ public:
     bool get(std::size_t pos) const; // checked access - has protection. 
     bool operator[](std::size_t pos) const; // can and should only be read only. Unchecked access.
     bool dot(const BitVector<dim>& vec) const;
+    std::size_t hammingWeight() const; 
+    std::size_t hammingDistance(const BitVector<dim>& vec) const; 
     BitVector<dim> operator+=(const BitVector<dim>& vec);
     BitVector<dim> reverse() const;
 
@@ -65,6 +67,18 @@ bool BitVector<dim>::dot(const BitVector<dim>& vec) const
         acc ^= mData[i] * vec[i];
     }
     return acc;
+}
+
+template <std::size_t dim>
+std::size_t BitVector<dim>::hammingWeight() const
+{
+    return mData.count();
+}
+
+template <std::size_t dim>
+std::size_t BitVector<dim>::hammingDistance(const BitVector<dim>& vec) const
+{
+    return (mData ^ vec.mData).count();
 }
 
 template <std::size_t dim>

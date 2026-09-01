@@ -1,4 +1,5 @@
 #pragma once
+
 #include <random>
 #include "bit_vector.h"
 
@@ -40,7 +41,7 @@ bool RNG::flipBit(double p)
 template <std::size_t dim>
 BitVector<dim> RNG::randomBitVector(double p)
 {
-    BitVector<dim> result {};
+    BitVector<dim> result {0};
     for (std::size_t i; i < dim; ++i)
     {
         result.set(i,flipBit(p));
