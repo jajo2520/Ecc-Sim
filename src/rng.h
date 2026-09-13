@@ -13,6 +13,7 @@ public:
 
     int randomInt(int lower, int upper); // inclusive
     float randomFloat(float lower, float upper);
+    float randomDouble(double lower, double upper);
     bool flipBit(double p);
     template <std::size_t dim>
     BitVector<dim> randomBitVector(double p);
@@ -33,6 +34,11 @@ float RNG::randomFloat(float lower, float upper)
     return dist(mt);
 }
 
+float RNG::randomDouble(double lower, double upper)
+{
+    std::uniform_real_distribution dist{lower, upper};
+    return dist(mt);
+}
 bool RNG::flipBit(double p)
 {
     return std::bernoulli_distribution(p)(mt);
