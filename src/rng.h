@@ -48,7 +48,7 @@ template <std::size_t dim>
 BitVector<dim> RNG::randomBitVector(double p)
 {
     BitVector<dim> result {0};
-    for (std::size_t i; i < dim; ++i)
+    for (std::size_t i {}; i < dim; ++i)
     {
         result.set(i,flipBit(p));
     }

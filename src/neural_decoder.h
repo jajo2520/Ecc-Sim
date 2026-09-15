@@ -22,6 +22,8 @@ public:
                                                                           // predictions after training.
     void backward(const std::array<double, n>& target);
     double computeLoss(const std::array<double, n>& target);
+    std::vector<double> getA1() {return a1;};
+
 private:
     std::size_t h; // everything that can be arrays are arrays (anything that isn't controlled by h parameter)
     double eta; 
@@ -29,7 +31,7 @@ private:
     std::vector<double> b1;
     std::vector<std::vector<double>> W2; // n x h
     std::array<double, n> b2;
-    std::array<double, n> x;
+    std::array<double, r> x;
     std::vector<double> a1;
     std::array<double, n> yhat;
 
@@ -55,11 +57,14 @@ NeuralDecoder<r>::NeuralDecoder(std::size_t hiddenSize, double learningRate, RNG
 template <std::size_t r>
 void NeuralDecoder<r>::initWeights(RNG& rng)
 {
-    for (std::size_t j {}; j < h; ++h)
+    double range1 = 1.0 / std::sqrt(static_cast<double>(r));
+    double range2 = 1.0 / std::sqrt(static_cast<double>(h));
+
+    for (std::size_t j {}; j < h; ++j)
     {
         for (std::size_t i {}; i < r; ++i)
         {
-            W1[j][i] = rng.randomDouble(-0.5, 0.5); // should probably find proper vals to initialise with.
+            W1[j][i] = rng.randomDouble(-range1, range1); 
         }
         b1[j] = 0.0;
     }
@@ -67,7 +72,7 @@ void NeuralDecoder<r>::initWeights(RNG& rng)
     {
         for (std::size_t i {}; i < h; ++i)
         {
-            W2[j][i] = rng.randomDouble(-0.5, 0.5);
+            W2[j][i] = rng.randomDouble(-range2, range2);
         }
         b2[j] = 0.0;
     }
@@ -91,10 +96,10 @@ std::array<double, NeuralDecoder<r>::n> NeuralDecoder<r>::forward(const std::arr
     // output layer
     for (std::size_t j {}; j < n; ++j)
     {
-        double z2 {b1[j]};
+        double z2 {b2[j]};
         for (std::size_t i {}; i < h; ++i)
         {
-            z2 += W1[j][i] * a1[i];
+            z2 += W2[j][i] * a1[i];
         }
         yhat[j] = sigmoid(z2);
     }
@@ -108,7 +113,7 @@ void NeuralDecoder<r>::backward(const std::array<double, n>& target)
     std::array<double, n> delta2 {};
     for (std::size_t k {}; k < n; ++k)
     {
-        delta2[k] = target[k] - yhat[k];
+        delta2[k] = yhat[k] - target[k];
     }
 
     std::vector<double> delta1(h);

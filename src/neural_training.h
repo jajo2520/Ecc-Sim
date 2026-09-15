@@ -29,6 +29,7 @@ namespace neural_training
         {
             outVec.set(i, doubleArray[i] >= 0.5);
         }
+        return outVec;
     } 
 
     template <std::size_t r>
@@ -42,7 +43,7 @@ namespace neural_training
     TrainingExample<r> generateExample(const HammingCode<r>& code, RNG& rng, double trainingP)
     {
         constexpr std::size_t n {HammingCode<r>::n};
-        BitVector<n> error {};
+        BitVector<n> error (0);
         for (std::size_t i {}; i < n; ++i)
         {
             error.set(i, rng.flipBit(trainingP));
@@ -57,14 +58,21 @@ namespace neural_training
     void trainNetwork(NeuralDecoder<r>& net, const HammingCode<r>& code, RNG& rng,
                       double trainingP, std::size_t numIterations)
     {
+        double runningLoss {};
         for (std::size_t i {}; i < numIterations; ++i)
         {
             TrainingExample<r> example = generateExample(code, rng, trainingP);
             net.forward(example.syndrome);
             net.backward(example.errorPattern);
-            if (i % 10 == 0)
+     
+            runningLoss += net.computeLoss(example.errorPattern);
+     
+            if ((i + 1) % 5000 == 0)
             {
-                std::cout << net.computeLoss(example.errorPattern) << std::endl;
+                std::cout << "iter " << (i + 1)
+                          << " avg loss (last " << 5000 << "): "
+                          << runningLoss / 5000 << "\n";
+                runningLoss = 0.0;
             }
         }
     }
