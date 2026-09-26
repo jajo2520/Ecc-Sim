@@ -71,13 +71,13 @@ Performance was measured via a Monte Carlo simulation - 10,000 trials for each p
 
 Full data: `results/`
 
-![BLER comparison, r=3](results/bler_r3.png)
-![BLER comparison, r=4](results/bler_r4.png)
-![BLER comparison, r=5](results/bler_r5.png)
+![BLER comparison, r=3](results/plots/bler_r3.png)
+![BLER comparison, r=4](results/plots/bler_r4.png)
+![BLER comparison, r=5](results/plots/bler_r5.png)
 
-![BER comparison, r=3](results/ber_r3.png)
-![BER comparison, r=4](results/ber_r4.png)
-![BER comparison, r=5](results/ber_r5.png)
+![BER comparison, r=3](results/plots/ber_r3.png)
+![BER comparison, r=4](results/plots/ber_r4.png)
+![BER comparison, r=5](results/plots/ber_r5.png)
 
 Across all three code sizes, the neural decoder tracks the classical decoder within a fraction of a percent at every tested value of $p$ — for both bit and block error rate. This holds even in the high-$p$ cases dominated by multi-bit errors, where the classical decoder's single-error-correction guarantee no longer applies and there is no unique correct answer, and despite the neural decoders being trained at a single, lower noise level ($p=0.05$) than most of the evaluation range. This suggests the learned mapping generalises beyond its training distribution rather than merely memorising it.
 
