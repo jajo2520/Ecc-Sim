@@ -43,9 +43,11 @@ To test: `ctest --output-on-failure`
 Most of the implementation is built around the number of parity bits, $r$, being the natural generating parameter - we can then derive the codeword length $n=2^r - 1$ and message length $k=n-r$ easily. Note that $r$ is also the length of the syndrome. $r$ was a natural choice as any $r$ would generate a valid Hamming code - this is not true for $k$ and $n$ - this allows us to avoid having to check if the generating parameter was valid each time.
 
 For the generator matrix $G$, systematic form was chosen ($G=[I_{k}|P]$) for much easier extraction of the decoded message (the message would be the first $k$ bits of the codeword). For syndrome decoding, the below equation was integral:
-\[
+
+$$
 H \cdot \text{received} = H \cdot c + H \cdot e_{i} = 0 + H \cdot e_{i} = \text{column i of H}
-/]
+$$
+
 The result $H\cdot \text{received}$ should give directly the position of the error, but as $G$ is in systematic form the lookup array `bitMap` was used to find the error position. (Note: this theory is called Syndrome decoding in Coding theory - it is used again in the neural decoder section).
 
 Dimensions of the matrices (and neural networks!) were compile-time template parameters, enabling codewords (`bitVector`s) to be stored as `std::bitset` , and dimension mismatches (which happened frequently) to be caught at compile-time.
